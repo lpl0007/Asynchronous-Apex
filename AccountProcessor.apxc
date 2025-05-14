@@ -1,0 +1,12 @@
+public class AccountProcessor {
+	@future
+    public static void countContacts(List<Id> ids) {
+        List<Account> accs = [Select Id, Name from Account Where Id IN :ids];
+        List<Account> updatedAccs = new List<Account>();
+        for(Account acc : accs){
+            acc.Number_of_Contacts__c = [Select count() from Contact Where AccountId =: acc.Id];
+            updatedAccs.add(acc);
+         }
+         update updatedAccs;
+    }
+}

@@ -1,0 +1,24 @@
+@isTest
+private class DailyLeadProcessorTest {
+	@testSetup
+    static void setup(){
+        List<Lead> leadList = new List<Lead>();
+        
+        for(Integer i = 0; i < 200; i++) {
+            Lead lea = new Lead(LastName = 'Test ' + i, Company = 'TestCompany ' + i);
+            leadList.add(lea);
+        }
+        
+        insert leadList;
+    }
+
+    @isTest
+    static void testDailyLeadProcessor() {
+        String testDate = '0 0 0 * * ?';
+        Test.startTest();
+        System.schedule('Test text', testDate, new DailyLeadProcessor());
+        Test.stopTest();
+        List<Lead> leadlistCheck = new List<Lead>([SELECT Id FROM Lead WHERE LeadSource = null LIMIT 200]);
+        System.assertEquals(200, leadListCheck.size());
+    }
+}
